@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>激活</title>
+    <style>
+        button{
+            width: 70vw;
+            height: 10rem;
+            margin: 1rem 0;
+        }
+        button[name=ok]{
+            background-color: #90ffa1;
+        }
+        button[name=cancal]{
+            background-color: #ff363f;
+        }
+        .myShow{
+            width: 100vw;
+        }
+        .myShow h1{
+            width: 60vw;
+        }
+    </style>
+</head>
+<body>
+<div class="myShow">
+<h1>Hi,<span id="user_name"><%= title %></span></h1>
+<button name="ok">确认登陆</button>
+<br>
+<button name="cancal">取消操作</button>
+</div>
+<script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+<script>
+    const myhost = "http://219.157.142.211:1314"
+    const myApi = myhost + "/login"
+    function setCode(api,data) {
+        $.ajax({
+            url: api,
+            type: 'get',
+            data,
+            dataType: 'json',
+            success: function (data) {
+                console.log(data.code)
+                alert("已提交")
+                self.opener=null;
+                self.close();
+                WeixinJSBridge.call('closeWindow');
+            }
+        })
+    }
+    $("button[name='ok']").on("click",function () {
+        let mydata = {
+            name:$("#user_name").text(),
+            stype:1
+        }
+        setCode(myApi,mydata)
+    })
+    $("button[name='cancal']").on("click",function () {
+        let mydata = {
+            name:$("#user_name").text(),
+            stype:2
+        }
+        setCode(myApi,mydata)
+    })
+
+</script>
+</body>
+</html>

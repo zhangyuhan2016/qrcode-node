@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>欢迎页</title>
+</head>
+<body>
+
+<h2>这是一个扫码激活的Demo</h2>
+
+<input type="text" name="user_name" placeholder="请在这里输入一些东西" maxlength="4" autofocus>
+<button name="sub">提交</button>
+<h3>点击提交下面就会噗的多一个二维码</h3>
+<div id="qrcode-img"></div>
+<h3>当前状态: <span id="status_code">等待中</span></h3>
+<script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+<script src="qrcode.js"></script>
+<script>
+    const myhost = "http://219.157.142.211:1314"
+    /*生成qrcode*/
+    function upQrImg(select,url){
+        $(select).html("");
+        jQuery(select).qrcode({
+            text: url
+        });
+    }
+    /*ajax请求结果*/
+    function getStatus(api) {
+        $.ajax({
+            url: api,
+            type: 'get',
+            dataType: 'json',
+            success: function (data) {
+               getST(data.tip,api)
+            }
+        })
+    }
+    function getST(boolean,api) {
+
+        if(boolean == 1){
+            $("#status_code").text("已成功扫码")
+        }else if(boolean == 2){
+            $("#status_code").text("您取消了本次操作")
+        }else{
+            $("#status_code").text("正在努力接收")
+            getStatus(api);
+        }
+    }
+
+    $("button[name='sub']").on("click",function () {
+        /*获取val*/
+        let name = $("input[name='user_name']").val();
+        let myurl = myhost + "/test?name=" + name
+        /*生成二维码*/
+        console.info(myurl)
+        upQrImg("#qrcode-img",myurl)
+        /*监听变化*/
+        let tempUrl = myhost + "/loginCode?name=" + name
+        getStatus(tempUrl)
+    })
+</script>
+</body>
+</html>
