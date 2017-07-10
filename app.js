@@ -26,5 +26,5 @@ app.get("/test",function (req,res,next) {
 
 // 创建服务端
 http.createServer(app).listen('80', function() {
-	console.log('启动服务器完成,查看效果请输入http://localhost/index.html');
+	console.log('启动服务器完成,查看效果请输入http://localhost/welcome.html');
 });
